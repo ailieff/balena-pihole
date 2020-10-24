@@ -1,3 +1,4 @@
+#FROM balenalib/raspberrypi4-64-debian:jessie-build AS build
 FROM balenalib/raspberrypi3-debian:jessie-build AS build
 
 WORKDIR /usr/src
