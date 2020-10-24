@@ -4,6 +4,7 @@ volumes:
   pihole_config:
   dnsmasq_config:
   dnscrypt_config:
+  config:
 
 services:
   pihole:
@@ -24,3 +25,43 @@ services:
       - 'dnscrypt_config:/config'
     ports:
       - '5053:5053/udp'
+
+  # add homeassistant config    
+  homeassistant:
+    image: homeassistant/raspberrypi4-homeassistant:stable
+    #build: homeassistant
+    network_mode: host
+    ports:
+      - 8123:8123    
+    privileged: true
+    volumes:
+      - config:/config
+    restart: always
+    devices:
+      - "/dev:/dev"
+      - "/dev/serial/by-id/usb-0658_0200-if00:/dev/zwave"      
+      
+  hass-configurator:
+    image: "causticlab/hass-configurator-docker:arm"
+    restart: always
+    ports:
+      - "8080:3218"
+    volumes:
+      - 'config:/hass-config'
+    environment:
+      - HC_BASEPATH=/hass-config      
+
+  # add mqtt
+  mqtt:
+    image: arm64v8/eclipse-mosquitto
+    ports:
+      - 1883:1883
+      
+  #add cli for HA
+  cli:
+    build: cli
+    ports:
+      - 22:22/tcp
+    volumes:
+      - config:/config
+
