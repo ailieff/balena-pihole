@@ -1,6 +1,6 @@
-# balena-pihole
+# balena-pihole <img src="https://raw.githubusercontent.com/klutchell/balena-pihole/main/logo.png" alt="Pi-hole" height="24"/>
 
-If you're looking for a way to quickly and easily get up and running with a Pi-hole device for your home network, this is the project for you.
+If you're looking for a way to quickly and easily get up and running with a [Pi-hole](https://pi-hole.net/) device for your home network, this is the project for you.
 
 This project is a [balenaCloud](https://www.balena.io/cloud) stack with the following services:
 
@@ -13,7 +13,7 @@ balenaCloud is a free service to remotely manage and update your Raspberry Pi th
 
 You can one-click-deploy this project to balena using the button below:
 
-[![deploy button](https://balena.io/deploy.png)](https://dashboard.balena-cloud.com/deploy?repoUrl=https://github.com/klutchell/balena-pihole&defaultDeviceType=raspberrypi3)
+[![deploy button](https://balena.io/deploy.svg)](https://dashboard.balena-cloud.com/deploy?repoUrl=https://github.com/klutchell/balena-pihole&defaultDeviceType=raspberrypi3)
 
 ## Manual Deployment
 
@@ -48,7 +48,3 @@ If you're having trouble getting the project running, submit an issue or post on
 
 * <https://github.com/pi-hole/docker-pi-hole/>
 * <https://github.com/DNSCrypt/dnscrypt-proxy>
-
-## License
-
-[MIT License](./LICENSE)
