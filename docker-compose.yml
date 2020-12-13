@@ -16,7 +16,7 @@ services:
       - "dnsmasq_config:/etc/dnsmasq.d"
     dns:
       - "127.0.0.1"
-      - "1.1.1.1"
+      - "8.8.8.8"
     environment:
       DNSMASQ_LISTENING: eth0
       INTERFACE: eth0
