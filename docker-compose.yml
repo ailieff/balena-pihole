@@ -1,10 +1,8 @@
-version: '2.1'
+version: "2.1"
 
 volumes:
   pihole_config:
   dnsmasq_config:
-  dnscrypt_config:
-  config:
 
 services:
   # https://hub.docker.com/r/pihole/pihole
@@ -16,39 +14,46 @@ services:
       - "dnsmasq_config:/etc/dnsmasq.d"
     dns:
       - "127.0.0.1"
-      - "8.8.8.8"
-    environment:
-      DNSMASQ_LISTENING: eth0
-      INTERFACE: eth0
-      DNS1: 127.0.0.1#5053
-      DNS2: 127.0.0.1#5053
+      - "1.1.1.1"
     network_mode: host
-    labels:
-      io.balena.features.dbus: '1'
 
-  # set pihole DNS1 and DNS2 service variables to 127.0.0.1#5053 to use dnscrypt-proxy for upstream DNS
-  dnscrypt-proxy:
-    build: ./dnscrypt-proxy
-    volumes:
-      - 'dnscrypt_config:/config'
+  # https://github.com/klutchell/unbound-dnscrypt
+  unbound:
+    build: ./unbound
+    privileged: true
     ports:
-      - '5053:5053/udp'
+      - "5053:5053/tcp"
+      - "5053:5053/udp"
 
-  # add homeassistant config    
+  # https://github.com/balenablocks/fbcp
+  fbcp:
+    image: balenablocks/fbcp:1.0.0
+    privileged: true
+
+  # prevent plymouth from blocking fbcp
+  # https://github.com/klutchell/balena-pihole/issues/25
+  # https://github.com/balena-os/meta-balena/issues/1772
+  dbus:
+    build: dbus
+    restart: on-failure
+    labels:
+        io.balena.features.dbus: "1"
+
+  # add homeassistant config
   homeassistant:
     image: homeassistant/raspberrypi4-homeassistant:stable
     #build: homeassistant
     network_mode: host
     ports:
-      - 8123:8123    
+      - 8123:8123
     privileged: true
     volumes:
       - config:/config
     restart: always
     devices:
       - "/dev:/dev"
-      - "/dev/serial/by-id/usb-0658_0200-if00:/dev/zwave"      
-      
+      - "/dev/serial/by-id/usb-0658_0200-if00:/dev/zwave"
+
   hass-configurator:
     image: "causticlab/hass-configurator-docker:arm"
     restart: always
@@ -57,14 +62,14 @@ services:
     volumes:
       - 'config:/hass-config'
     environment:
-      - HC_BASEPATH=/hass-config      
+      - HC_BASEPATH=/hass-config
 
   # add mqtt
   mqtt:
     image: arm64v8/eclipse-mosquitto
     ports:
       - 1883:1883
-      
+
   #add cli for HA
   cli:
     build: cli
