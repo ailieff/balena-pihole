@@ -3,6 +3,7 @@ version: "2.1"
 volumes:
   pihole_config:
   dnsmasq_config:
+  config:
 
 services:
   # https://hub.docker.com/r/pihole/pihole
